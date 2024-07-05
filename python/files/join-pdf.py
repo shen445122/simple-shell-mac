@@ -11,6 +11,8 @@ sys.setrecursionlimit(6000)
 D_dir = "./"
 BitStart = 0
 BitEnd = -4
+NewList= []
+Tital = ""
 
 dirs = os.listdir(D_dir)
 for d in dirs:
@@ -32,17 +34,24 @@ for d in dirs:
         pdf_path = d
         files = os.listdir(pdf_path)
         for l in files:
+            print(l)
             if l == ".DS_Store":
                 files.remove(".DS_Store")
+            if l.startswith('.'):
+                continue
+            if l.startswith('pinjie'):
+                continue
+            if l.startswith(Tital):
+                NewList.append(l) 
 
-        files.sort(key=lambda x:int(x[BitStart:BitEnd]))
+        NewList.sort(key=lambda x:int(x[BitStart:BitEnd]))
         pdfdoc = PdfFileMerger()
-        print(files)
-        for pdf in files:
+        print(NewList)
+        for pdf in NewList:
             if pdf.startswith('.'):
                 continue
 
             print(pdf)
             pdf_file = pdf_path + '/' + pdf  
             pdfbytes = pdfdoc.append(pdf_file)
-        pdfdoc.write(pdf_path+'.pdf')
+        pdfdoc.write('../../' + Tital + '.pdf')

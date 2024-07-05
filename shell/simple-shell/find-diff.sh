@@ -1,7 +1,5 @@
 #########################################################################
 # File Name: find-diff.sh
-# Author: shen.szr
-# mail: shen.szr@alibaba-inc.com
 # Created Time: Sun Oct 11 17:27:47 2020
 # Function: use: sh finddiff.sh olddir newdir
 #########################################################################

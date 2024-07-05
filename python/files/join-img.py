@@ -2,7 +2,6 @@
 import fitz  
 import os
 
-
 # 循环path中的文件，可import os 然后用 for img in os.listdir(img_path)实现
 # 这里为了让文件以1，2，3的形式进行拼接，就偷懒循环文件名中的数字。
 
