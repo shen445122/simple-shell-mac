@@ -1,31 +1,39 @@
-#-*- coding:utf-8 -*-
-from bs4 import BeautifulSoup
-import requests,time,json
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Lookup Douban book links and ratings from a text file list."""
 
-D_file = "./list"
-headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"}
+from __future__ import annotations
 
-def get_detail(url):
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"}
-# url = "https://book.douban.com/subject/34869428/"
-    web_data = requests.get(url,headers=headers)
-    soup = BeautifulSoup(web_data.text,'lxml')
-    rank = soup.select('#interest_sectl > div > div.rating_self.clearfix > strong')[0].get_text().strip()
-# print(rank)
-    return rank
-def get_book(title):
-    url = "https://book.douban.com/j/subject_suggest?q=%s"%title
-    rsp = requests.get(url,headers=headers)
-    rs_dict = json.loads(rsp.text)
-# print(rs_dict)
-    url_ = rs_dict[0]['url']
-# print(url_)
-    return url_,get_detail(url_)
+import argparse
+from pathlib import Path
+
+from douban_common import DoubanClient
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description='Lookup Douban book URLs and ratings from a file list.')
+    parser.add_argument('--list-file', default='./list', help='Path to a text file containing one book title per line.')
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
+    list_path = Path(args.list_file).expanduser().resolve()
+    if not list_path.exists():
+        raise SystemExit(f'List file does not exist: {list_path}')
+
+    client = DoubanClient()
+    for line in list_path.read_text(encoding='utf-8').splitlines():
+        title = line.strip()
+        if not title:
+            continue
+        try:
+            result = client.get_book(title)
+            print(f'{result.title}\t{result.rank or "暂无评分"}\t{result.url}')
+        except Exception as exc:
+            print(f'[ERROR] {title}: {exc}')
+    return 0
+
 
 if __name__ == '__main__':
-    file = open(D_file, encoding = "utf-8")
-
-    with open(D_file) as file:
-        for item in file:
-            url,rank = get_book(item)
-            print(item,rank,url)
+    raise SystemExit(main())
