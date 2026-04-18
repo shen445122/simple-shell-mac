@@ -1,0 +1,5 @@
+-r requirements-base.txt
+
+# Development / quality tools
+pytest>=8.0
+ruff>=0.5

@@ -23,5 +23,19 @@ cd simple-shell-mac
 如果你要使用 Python 脚本，建议先安装依赖：
 
 ```bash
+# 基础运行依赖
 pip install -r python/requirements.txt
+
+# 或者显式安装基础依赖文件
+pip install -r python/requirements-base.txt
+
+# 如果需要开发 / 检查工具
+pip install -r python/requirements-dev.txt
+```
+
+也可以直接使用 `pyproject.toml` 里的可选依赖：
+
+```bash
+pip install .[python-scripts]
+pip install .[dev]
 ```

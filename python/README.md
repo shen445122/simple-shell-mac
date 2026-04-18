@@ -23,10 +23,22 @@
 
 ## 依赖安装
 
-部分脚本依赖第三方库，建议统一安装：
+现在把依赖分成了 3 层：
+- `requirements.txt`：默认入口，当前指向基础运行依赖
+- `requirements-base.txt`：脚本运行所需的最小依赖集合
+- `requirements-dev.txt`：开发 / 检查工具（在基础依赖之上增加 `pytest`、`ruff`）
+
+常用安装方式：
 
 ```bash
+# 默认安装入口
 pip install -r python/requirements.txt
+
+# 只安装基础运行依赖
+pip install -r python/requirements-base.txt
+
+# 安装开发依赖
+pip install -r python/requirements-dev.txt
 ```
 
 如果你只想手动安装，也可以直接执行：
@@ -40,6 +52,14 @@ pip install pymupdf PyPDF2 requests beautifulsoup4 lxml mysql-connector-python x
 - `join-pdf.py` 使用 `PyPDF2`
 - 豆瓣脚本使用 `requests`、`beautifulsoup4`、`lxml`
 - Excel 导入脚本使用 `mysql-connector-python` 和 `xlrd`
+- 开发工具依赖在 `requirements-dev.txt` 中，当前包括 `pytest` 和 `ruff`
+
+另外，仓库根目录新增了 `pyproject.toml`，也可以通过可选依赖安装：
+
+```bash
+pip install .[python-scripts]
+pip install .[dev]
+```
 
 ## 1. 每个图片子目录生成一个 PDF
 
